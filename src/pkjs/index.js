@@ -189,10 +189,10 @@ function getWeather(locationString, autoLocation) {
 			var urlForecast;
 			var urlCurrent;
 			if (autoLocation) {
-				urlForecast = 'https://api.openweathermap.org/data/2.5/forecast/daily?' + locationString + '&appid=' + owmAPIkey + '&cnt=2';
+				urlForecast = 'https://api.openweathermap.org/data/2.5/forecast?' + locationString + '&appid=' + owmAPIkey + '&cnt=2';
 				urlCurrent = 'https://api.openweathermap.org/data/2.5/weather?' + locationString + '&appid=' + owmAPIkey;
 			} else {
-				urlForecast = 'https://api.openweathermap.org/data/2.5/forecast/daily?q=' + locationString + '&appid=' + owmAPIkey + '&cnt=2';
+				urlForecast = 'https://api.openweathermap.org/data/2.5/forecast?q=' + locationString + '&appid=' + owmAPIkey + '&cnt=2';
 				urlCurrent = 'https://api.openweathermap.org/data/2.5/weather?q=' + locationString + '&appid=' + owmAPIkey;
 			}
 
