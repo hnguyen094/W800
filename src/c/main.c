@@ -352,7 +352,7 @@ static void handle_battery(BatteryChargeState charge_state) {
 	if (charge_state.is_charging) batteryCharge = 1;
 	else if (charge_state.is_plugged) batteryCharge = 2;
 	else batteryCharge = 0;
-	batteryLevel = ((charge_state.charge_percent)/10);
+	batteryLevel = charge_state.charge_percent;
 	
 	if (oldLevel != batteryLevel || oldCharge != batteryCharge) {
 		layer_mark_dirty(s_layer_toggle);
@@ -452,7 +452,7 @@ static char *getSlotData(char *inBuf, bool tap) {
 			case  6:
 				if (batteryCharge == 1) snprintf(buf, sizeof(buf), "Chrg");
 				else if (batteryCharge == 2) snprintf(buf, sizeof(buf), "Plug");
-				 else snprintf(buf, sizeof(buf), confValue == 5 ? "%3d%%" : "%3d", (int) batteryLevel*10);
+				 else snprintf(buf, sizeof(buf), confValue == 5 ? "%3d%%" : "%3d", (int) batteryLevel);
 					break;
 			// Steps
 			case  7:
@@ -700,14 +700,14 @@ static void toggle_update_proc(Layer *layer, GContext *ctx) {
 	// Battery
 	if (conf.batteryStyle == 1) {
 		// Full bar
-		if (batteryLevel >= 1 || batteryCharge == 1) {
+		if (batteryLevel >= 10 || batteryCharge == 1) {
 			graphics_context_set_fill_color(ctx, conf.displayTextColor);
 			graphics_context_set_stroke_color(ctx, conf.displayTextColor);
 			graphics_draw_bitmap_in_rect(ctx, s_bitmap_toggle_charge, GRect(28, 0, gbitmap_get_bounds(s_bitmap_toggle_charge).size.w, gbitmap_get_bounds(s_bitmap_toggle_charge).size.h));
-			graphics_fill_rect(ctx, GRect(30,1,(batteryLevel == 10 ? 13 : batteryLevel+2),2), 0,0);
+			graphics_fill_rect(ctx, GRect(30,1,(batteryLevel == 100 ? 13 : (batteryLevel/10)+2),2), 0,0);
 			if (batteryCharge != 1) {
-				graphics_fill_rect(ctx, GRect(31,0,(batteryLevel == 10 ? 13 : batteryLevel+2),1), 0,0);
-				graphics_fill_rect(ctx, GRect(29,3,(batteryLevel == 10 ? 13 : batteryLevel+2),1), 0,0);
+				graphics_fill_rect(ctx, GRect(31,0,(batteryLevel == 100 ? 13 : (batteryLevel/10)+2),1), 0,0);
+				graphics_fill_rect(ctx, GRect(29,3,(batteryLevel == 100 ? 13 : (batteryLevel/10)+2),1), 0,0);
 			}
 			
 		}
@@ -715,19 +715,19 @@ static void toggle_update_proc(Layer *layer, GContext *ctx) {
 	else if (conf.batteryStyle == 2) {
 		// Text
 		char batBuf[8];
-		if (batteryLevel >= 1  || batteryCharge == 1) { snprintf(batBuf, sizeof(batBuf), batteryCharge == 1 ? "%d!" : "%d", batteryLevel*10); }
+		if (batteryLevel >= 10  || batteryCharge == 1) { snprintf(batBuf, sizeof(batBuf), batteryCharge == 1 ? "%d!" : "%d", batteryLevel); }
 		else { snprintf(batBuf, sizeof(batBuf), "!!!"); }
 		graphics_context_set_text_color(ctx, conf.displayTextColor);		
 		graphics_draw_text(ctx, batBuf, s_font_bat, GRect(26,-11,16,16), GTextOverflowModeWordWrap, GTextAlignmentRight, NULL);
 	}
 	else {
-		if (batteryLevel >= 1 || batteryCharge == 1) {
+		if (batteryLevel >= 10 || batteryCharge == 1) {
 			// Toggle button
 			graphics_context_set_fill_color(ctx, conf.displayTextColor);
 			graphics_context_set_stroke_color(ctx, conf.displayTextColor);
 			graphics_draw_bitmap_in_rect(ctx, (batteryCharge == 1 ? s_bitmap_toggle_charge : s_bitmap_toggle_battery), GRect(28, 0, gbitmap_get_bounds(s_bitmap_toggle_charge).size.w, gbitmap_get_bounds(s_bitmap_toggle_charge).size.h));
-			graphics_fill_rect(ctx, GRect(30,1,(batteryLevel == 10 ? 13 : batteryLevel+2),1), 0,0);
-			graphics_fill_rect(ctx, GRect(29,2,(batteryLevel == 10 ? 13 : batteryLevel+2),1), 0,0);
+			graphics_fill_rect(ctx, GRect(30,1,(batteryLevel == 100 ? 13 : (batteryLevel/10)+2),1), 0,0);
+			graphics_fill_rect(ctx, GRect(29,2,(batteryLevel == 100 ? 13 : (batteryLevel/10)+2),1), 0,0);
 		}
 	}
 
