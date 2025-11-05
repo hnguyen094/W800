@@ -1119,7 +1119,30 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
 		else {
 			APP_LOG(APP_LOG_LEVEL_INFO, "Received Config data.");
 		 	// Must have been config settings then :)
-
+	
+			// Weather Config t_wConfig[]
+			Tuple *t_wConfig[10];
+			for (int i = 0; i < 10; i++) {
+				if (dict_find(iter, MESSAGE_KEY_wConf + i) != NULL) {
+					t_wConfig[i] = dict_find(iter, MESSAGE_KEY_wConf + i);
+				}
+			}
+			
+			if (!t_wConfig[0] || atoi(t_wConfig[0]->value->cstring) == 0) {
+				APP_LOG(APP_LOG_LEVEL_ERROR, "Config Error: Malformed Data.");
+				return;
+			};
+			
+			if (t_wConfig[0]) conf.weatherProvider = atoi(t_wConfig[0]->value->cstring);
+			if (t_wConfig[1]) conf.weatherTempUnit = atoi(t_wConfig[1]->value->cstring);
+			if (t_wConfig[3]) conf.weatherUpdateRate = atoi(t_wConfig[3]->value->cstring);
+			if (t_wConfig[4]) conf.weatherDayNight = atoi(t_wConfig[4]->value->cstring);
+			
+			if (t_wConfig[6]) conf.weatherBoxTop = atoi(t_wConfig[6]->value->cstring);
+			if (t_wConfig[7]) conf.weatherBoxBottom = atoi(t_wConfig[7]->value->cstring);
+			if (t_wConfig[8]) conf.weatherBoxTopTap = atoi(t_wConfig[8]->value->cstring);
+			if (t_wConfig[9]) conf.weatherBoxBottomTap = atoi(t_wConfig[9]->value->cstring);
+			
 			// Colour config
 			Tuple *t_cConfig[5];
 			for (int i = 0; i < 5; i++) {
@@ -1132,26 +1155,6 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
 			if (t_cConfig[3]) 	conf.displayTextColor = GColorFromHEX(t_cConfig[3]->value->int32);
 			if (t_cConfig[4]) conf.displayBorderColor = GColorFromHEX(t_cConfig[4]->value->int32);
 
-			
-			// Weather Config t_wConfig[]
-			Tuple *t_wConfig[10];
-			for (int i = 0; i < 10; i++) {
-				if (dict_find(iter, MESSAGE_KEY_wConf + i) != NULL) {
-					t_wConfig[i] = dict_find(iter, MESSAGE_KEY_wConf + i);
-				}
-			}
-			if (t_wConfig[0]) {};
-			
-			if (t_wConfig[0]) conf.weatherProvider = atoi(t_wConfig[0]->value->cstring);
-			if (t_wConfig[1]) conf.weatherTempUnit = atoi(t_wConfig[1]->value->cstring);
-			if (t_wConfig[3]) conf.weatherUpdateRate = atoi(t_wConfig[3]->value->cstring);
-			if (t_wConfig[4]) conf.weatherDayNight = atoi(t_wConfig[4]->value->cstring);
-			
-			if (t_wConfig[6]) conf.weatherBoxTop = atoi(t_wConfig[6]->value->cstring);
-			if (t_wConfig[7]) conf.weatherBoxBottom = atoi(t_wConfig[7]->value->cstring);
-			if (t_wConfig[8]) conf.weatherBoxTopTap = atoi(t_wConfig[8]->value->cstring);
-			if (t_wConfig[9]) conf.weatherBoxBottomTap = atoi(t_wConfig[9]->value->cstring);
-			
 			// Configuration
 			
 			// Vibration Settings
