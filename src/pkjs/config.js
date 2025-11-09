@@ -158,7 +158,8 @@ module.exports = [
 			"options": [
 				{"label": "Larger",	"value": "2"},
 				{"label": "Smaller",	"value": "1"},
-				{"label": "Smaller with Seconds",	"value": "3"}
+				{"label": "Smaller with Seconds",	"value": "3"},
+				{"label": "Smaller with Seconds on Toggle",	"value": "4"}
 			]
 		}
 	]

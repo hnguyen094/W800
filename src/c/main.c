@@ -766,8 +766,12 @@ static void update_time(struct tm *tick_time, TimeUnits units_changed, bool firs
 	}
 
 	// Time, Seconds
-	if (conf.mainTimeStyle == 3 && (units_changed & SECOND_UNIT || firstRun)) {
-		strftime(s_bufferSecond, sizeof(s_bufferSecond), "%S", tick_time);
+	if (conf.mainTimeStyle >= 3 && (units_changed & SECOND_UNIT || firstRun)) {
+		if (conf.mainTimeStyle == 4 && !tapTrigger) {
+			strcpy(s_bufferSecond, "--");
+		} else {
+			strftime(s_bufferSecond, sizeof(s_bufferSecond), "%S", tick_time);
+		}
 		text_layer_set_text(s_layer_second, s_bufferSecond);
 	}
 
@@ -915,7 +919,7 @@ static void main_window_load(Window *window) {
 		editTextLayer(s_layer_hour, GRect(SCREENLEFT-8, SCREENTOP+45, 144, 100), conf.displayTextColor, GColorClear, s_font_hour_big, GTextAlignmentRight);
 		layer_set_frame(bitmap_layer_get_layer(s_layer_pm), GRect(SCREENLEFT+12, SCREENTOP+52, 10, 11));
 	}
-	else if (conf.mainTimeStyle == 3) {
+	else if (conf.mainTimeStyle >= 3) {
 		editTextLayer(s_layer_hour,GRect(SCREENLEFT+3, SCREENTOP+48, 100, 70), conf.displayTextColor, GColorClear, s_font_hour, GTextAlignmentRight);
 		editTextLayer(s_layer_second,GRect(SCREENLEFT+96, SCREENTOP+58, 40, 40), conf.displayTextColor, GColorClear, s_font_second, GTextAlignmentRight);
 		layer_set_frame(bitmap_layer_get_layer(s_layer_pm), GRect(SCREENLEFT+10, SCREENTOP+55, 10, 11));
@@ -945,7 +949,7 @@ static void main_window_load(Window *window) {
 
 	// Sets the layer hidden or visible based on config
 	layer_set_hidden(text_layer_get_layer(s_layer_hour), conf.mainTimeStyle == 0 ? true : false);
-	layer_set_hidden(text_layer_get_layer(s_layer_second), conf.mainTimeStyle != 3 ? true : false);
+	layer_set_hidden(text_layer_get_layer(s_layer_second), conf.mainTimeStyle < 3 ? true : false);
 	layer_set_hidden(text_layer_get_layer(s_layer_4char), (conf.fourData == 0 && conf.fourDataTap == 0)? true : false);
 	layer_set_hidden(text_layer_get_layer(s_layer_infobar_left), conf.infoLeftStyle == 0 ? true : false);
 	layer_set_hidden(text_layer_get_layer(s_layer_infobar_right), conf.infoRightStyle == 0 ? true : false);
