@@ -1010,12 +1010,24 @@ static void get_weather() {
         if (s_jsReady) {
             strcpy(weather.location,"Sending Request...");
             DictionaryIterator *iter;
-            app_message_outbox_begin(&iter);
-            dict_write_uint8(iter, 0, 0);
-            int res = app_message_outbox_send();
-            if (res == 0) strcpy(weather.location,"Request Sent.");
-            else if (res == 8) strcpy(weather.location,"Disconnected.");
-            else strcpy(weather.location,"Error.");
+            AppMessageResult res = app_message_outbox_begin(&iter);
+            if (res == APP_MSG_OK) {
+                dict_write_uint8(iter, 0, 0);
+                res = app_message_outbox_send();
+                switch(res) {
+                    case APP_MSG_OK:
+                        strcpy(weather.location, "Request Sent.");
+                        break;
+                    case APP_MSG_NOT_CONNECTED:
+                        strcpy(weather.location, "Disconnected.");
+                        break;
+                    default:
+                        APP_LOG(APP_LOG_LEVEL_ERROR, "GetWeather: Error sending outbox: %d", (int)res);
+                        snprintf(weather.location, sizeof(weather.location), "Error: %d", (int)res);
+                }
+            } else {
+                APP_LOG(APP_LOG_LEVEL_ERROR, "GetWeather: Error prepping outbox: %d", (int)res);
+            }
         }
         else APP_LOG(APP_LOG_LEVEL_ERROR, "GetWeather: js connection not ready.");
     }
