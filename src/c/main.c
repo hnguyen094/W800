@@ -380,6 +380,9 @@ static void handle_tap(AccelAxisType axis, int32_t direction) {
 		tapTrigger = true;
 		tapDuration = conf.tapDuration;
 		//layer_mark_dirty(s_layer_background);
+		time_t temp = time(NULL);
+		struct tm *tick_time = localtime(&temp);
+		update_time(tick_time, SECOND_UNIT, true);
 		update_fourSlot(true);
 	}
 }
@@ -766,7 +769,7 @@ static void update_time(struct tm *tick_time, TimeUnits units_changed, bool firs
 	}
 
 	// Time, Seconds
-	if (conf.mainTimeStyle >= 3 && (units_changed & SECOND_UNIT || firstRun)) {
+	if (conf.mainTimeStyle >= 3) {
 		if (conf.mainTimeStyle == 4 && !tapTrigger) {
 			strcpy(s_bufferSecond, "--");
 		} else {
