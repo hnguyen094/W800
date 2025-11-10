@@ -123,7 +123,7 @@ function getWeather(locationString, autoLocation) {
     console.log("Weather - Sending weather requests.");
 
     // Get weather from WU
-    if (settings['wConf[0]'] == 2) {
+    if (provider == 2) {
         try {
             wuAPIkey = settings.keyWU;
             if (DEBUG) console.log('Weather - Using WU with API key [' + wuAPIkey + ']');
@@ -196,15 +196,24 @@ function getWeather(locationString, autoLocation) {
             urlCurrent = 'https://api.openweathermap.org/data/2.5/weather?q=' + locationString + '&appid=' + owmAPIkey;
         }
 
-        if (DEBUG) console.log(urlForecast); console.log(urlCurrent);
+        if (DEBUG) {
+            console.log(urlForecast);
+            console.log(urlCurrent);
+        }
 
         xhrRequest
         (urlForecast, 'GET',
             function(responseText) {
                 if (DEBUG) console.log("Weather - Got response, parsing forecast");
-                var json = JSON.parse(responseText);
-                if (json.cod == "200") {
-
+                var json = null;
+                try {
+                    json = JSON.parse(responseText);
+                } catch(e) {}
+                if (json == null) {
+                    console.error("Weather - Forecast Weather Parse Failure.");
+                    location = 'OWM: JSON Parse Failure.';
+                    buildMessage(0);
+                } else if (json.cod == "200") {
                     time = new Date();
                     if (time.getHours() < forecastTime) {forecastNumber = 0; console.log("Weather - Forecast : Today.");}
                     else {forecastNumber = 1; console.log("Weather - Forecast : Tomorrow.");}
@@ -214,26 +223,49 @@ function getWeather(locationString, autoLocation) {
            */
 
                     //tempCurrent = tempTo(json.list[0].temp.day);
-                    tempMin = tempTo(json.list[forecastNumber].temp.min);
-                    tempMax = tempTo(json.list[forecastNumber].temp.max);
-                    condForecast = json.list[forecastNumber].weather[0].description;
-
+                    var success = true;
+                    try {
+                        tempMin = tempTo(json.list[forecastNumber].temp.min);
+                        tempMax = tempTo(json.list[forecastNumber].temp.max);
+                        condForecast = json.list[forecastNumber].weather[0].description;
+                    } catch(e) {
+                        console.error("Weather - Forecast Weather Parse Failure.");
+                        location = 'OWM: JSON Parse Failure.';
+                        buildMessage(0);
+                        success = false;
+                    }
+                    if (!success) return;
                     xhrRequest
                     (urlCurrent, 'GET',
                         function(responseText) {
                             if (DEBUG) console.log("Weather - Got responce, parsing current");
 
-                            var json = JSON.parse(responseText);
-                            if (json.cod == "200") {
-
-                                tempCurrent = tempTo(json.main.temp,1);
-                                condMain = json.weather[0].main;
-                                condDesc = json.weather[0].description;
-                                sunrise = getSunTime(json.sys.sunrise*1000);
-                                sunset = getSunTime(json.sys.sunset*1000);
-                                location = json.name;
-
-                                buildMessage(1);
+                            var json = null;
+                            try {
+                                json = JSON.parse(responseText);
+                            } catch(e) {}
+                            if (json == null) {
+                                console.error("Weather - Current Weather Parse Failure.");
+                                location = 'OWM: JSON Parse Failure.';
+                                buildMessage(0);
+                            } else if (json.cod == "200") {
+                                var success = true;
+                                try {
+                                    tempCurrent = tempTo(json.main.temp,1);
+                                    condMain = json.weather[0].main;
+                                    condDesc = json.weather[0].description;
+                                    sunrise = getSunTime(json.sys.sunrise*1000);
+                                    sunset = getSunTime(json.sys.sunset*1000);
+                                    location = json.name;
+                                } catch(e) {
+                                    console.error("Weather - Current Weather Parse Failure.");
+                                    location = 'OWM: JSON Parse Failure.';
+                                    buildMessage(0);
+                                    success = false;
+                                }
+                                if (success) {
+                                    buildMessage(1);
+                                }
                                 //sendMessage(d);
                             } else {
                                 console.error("Weather - Current Weather Failure.");
