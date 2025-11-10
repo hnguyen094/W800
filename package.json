@@ -79,7 +79,7 @@
                     "type": "bitmap"
                 },
                 {
-                    "characterRegex": "[0-9:. ]",
+                    "characterRegex": "[0-9:. -]",
                     "file": "fonts/FONT_SECOND_25.ttf",
                     "name": "FONT_SECOND_25",
                     "targetPlatforms": null,
