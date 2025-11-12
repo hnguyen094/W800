@@ -1008,10 +1008,10 @@ static void main_window_load(Window *window) {
 static void get_weather() {
     if (conf.enWeather) {
         if (s_jsReady) {
-            strcpy(weather.location,"Sending Request...");
             DictionaryIterator *iter;
             AppMessageResult res = app_message_outbox_begin(&iter);
             if (res == APP_MSG_OK) {
+                strcpy(weather.location,"Sending Request...");
                 dict_write_uint8(iter, 0, 0);
                 res = app_message_outbox_send();
                 switch(res) {
