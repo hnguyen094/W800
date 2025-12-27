@@ -41,7 +41,7 @@
             "media": [
                 {
                     "characterRegex": "[0-9:chr!]",
-                    "file": "fonts/FONT_BAT_5.TTF",
+                    "file": "fonts/FONT_BAT_5.ttf",
                     "name": "FONT_BAT_16",
                     "targetPlatforms": null,
                     "trackingAdjust": 1,
@@ -79,8 +79,8 @@
                     "type": "bitmap"
                 },
                 {
-                    "characterRegex": "[0-9:. ]",
-                    "file": "fonts/FONT_SECOND_25.TTF",
+                    "characterRegex": "[0-9:. -]",
+                    "file": "fonts/FONT_SECOND_25.ttf",
                     "name": "FONT_SECOND_25",
                     "targetPlatforms": null,
                     "trackingAdjust": 2,
@@ -88,7 +88,7 @@
                 },
                 {
                     "characterRegex": "[0-9A-Z %()*:$-]",
-                    "file": "fonts/FONT_INFO_SMALL_16.TTF",
+                    "file": "fonts/FONT_INFO_SMALL_16.ttf",
                     "name": "FONT_INFO_SMALL_16",
                     "targetPlatforms": null,
                     "trackingAdjust": -1,
@@ -96,14 +96,14 @@
                 },
                 {
                     "characterRegex": "[0-9A-Z %()*:$-]",
-                    "file": "fonts/FONT_INFO_BIG_16.TTF",
+                    "file": "fonts/FONT_INFO_BIG_16.ttf",
                     "name": "FONT_INFO_BIG_16",
                     "targetPlatforms": null,
                     "type": "font"
                 },
                 {
                     "characterRegex": "[0-9:. ]",
-                    "file": "fonts/FONT_HOUR_BIG_42.TTF",
+                    "file": "fonts/FONT_HOUR_BIG_42.ttf",
                     "name": "FONT_HOUR_BIG_42",
                     "targetPlatforms": null,
                     "trackingAdjust": 3,
@@ -111,7 +111,7 @@
                 },
                 {
                     "characterRegex": "[0-9: ]",
-                    "file": "fonts/FONT_HOUR_35.TTF",
+                    "file": "fonts/FONT_HOUR_35.ttf",
                     "name": "FONT_HOUR_35",
                     "targetPlatforms": null,
                     "trackingAdjust": 1,
@@ -119,7 +119,7 @@
                 },
                 {
                     "characterRegex": "[\u00b0 -~]",
-                    "file": "fonts/FONT_FOURCHAR_16.TTF",
+                    "file": "fonts/FONT_FOURCHAR_16.ttf",
                     "name": "FONT_FOURCHAR_16",
                     "targetPlatforms": null,
                     "type": "font"
